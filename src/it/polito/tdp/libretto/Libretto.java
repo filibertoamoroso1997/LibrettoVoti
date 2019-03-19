@@ -11,8 +11,14 @@ public class Libretto {
 		this.voti = new ArrayList<Voto>() ;
 	}
 		
-	public void add(Voto v) {
-		voti.add(v);
+	public boolean add(Voto v) {
+		if(!this.esisteGiaVoto(v) && !this.votoConflitto(v)) {
+			voti.add(v);
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public List<Voto> cercaVoti(int punti){
@@ -25,23 +31,34 @@ public class Libretto {
 	}
 	
 	public Voto cercaEsame(String nomeEsame) {
-		for(Voto v : this.voti) {
-			if(v.getCorso().equals(nomeEsame))
-				return v;
-		}
+		Voto voto = new Voto(0, nomeEsame, null);
+		int pos = this.voti.indexOf(voto);
+		if(pos==-1)
+			return null;
+		else
+			return this.voti.get(pos);
 		
-		return null;
+		
 	}
 	
 	public boolean esisteGiaVoto(Voto v) {
-		Voto trovato = this.cercaEsame(v.getCorso());
-		if(trovato==null)
+		int pos = this.voti.indexOf(v);
+		if(pos==-1)
 			return false;
-		if(trovato.getPunti()==v.getPunti())
-			return true;
-		else
-			return false;
-	}
+		else 
+			return (v.getPunti() == this.voti.get(pos).getPunti());
+		}
 
+	public boolean votoConflitto(Voto v) {
+		int pos = this.voti.indexOf(v);
+		if(pos==-1)
+			return false;
+		else 
+			return (v.getPunti() != this.voti.get(pos).getPunti());
+	}
+	
+	public String toString() {
+		return this.voti.toString();
+	}
 	
 }
